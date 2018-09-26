@@ -1,0 +1,92 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: <SERVICE HERE> # NOTE: update this with your service name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  memorySize: 128 # set the maximum memory of the Lambdas in Megabytes
+  timeout: 10 # the timeout is 10 seconds (default is 6 seconds)
+  stage: dev # setting the env stage to dev, this will be visible in the routes
+  region: <REGION HERE> # NOTE: update this with your region
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  create:
+    handler: handlers/create.create
+    events:
+    - http:
+        path: user/create
+        method: post
+        cors: true
+  update:
+    handler: handlers/update.update
+    events:
+    - http:
+        path: user/update
+        method: post
+        cors: true
+    - http:
+        path: user/update/{field}
+        method: post
+        cors: true
+  validate:
+    handler: handlers/authenticate.authenticate
+    events:
+    - http:
+        path: user/authenticate
+        method: post
+        cors: true
+  retrieve:
+    handler: handlers/retrieve.retrieve
+    events:
+      - http:
+          path: user/retrieve/{id}
+          method: post
+          cors: true
+
+plugins:
+- serverless-offline # adding the plugin to be able to run the offline emulation
